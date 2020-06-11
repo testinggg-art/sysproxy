@@ -98,3 +98,26 @@ func ShowProxy() (string, error) {
 	}
 	return strings.Join(result, "\n"), nil
 }
+
+func ShowDNS() (string, error) {
+	nt, err := networkType()
+	if err != nil {
+		return "", err
+	}
+	cmd := exec.Command(COMMAND, "-getdnsservers", nt.String())
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(out)), nil
+}
+
+func SetDNS(servers []string) error {
+	nt, err := networkType()
+	if err != nil {
+		return err
+	}
+	args := append([]string{"-setdnsservers", nt.String()}, servers...)
+	cmd := exec.Command(COMMAND, args...)
+	return cmd.Run()
+}

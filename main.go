@@ -17,6 +17,8 @@ var httpsProxy = flag.String("https", "", "https proxy server and port")
 var socksProxy = flag.String("socks", "", "socks proxy server and port")
 var stop = flag.Bool("stop", false, "disable all proxies")
 var show = flag.Bool("show", false, "show all proxies")
+var showDNS = flag.Bool("showDNS", false, "show dns servers")
+var setDNS = flag.String("setDNS", "", "dns servers join by ,")
 
 func main() {
 	flag.Parse()
@@ -79,5 +81,17 @@ func main() {
 		if err == nil {
 			fmt.Println(out)
 		}
+	}
+
+	if *showDNS {
+		out, err := sysproxy.ShowDNS()
+		if err == nil {
+			fmt.Println(out)
+		}
+	}
+
+	if *setDNS != "" {
+		servers := strings.Split(*setDNS, ",")
+		sysproxy.SetDNS(servers)
 	}
 }
